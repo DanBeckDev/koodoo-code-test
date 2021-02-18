@@ -11,4 +11,3 @@ test('determines if the balance goes down by varying amounts each month', () => 
 test('determines if the balance goes down by the same amount each month', () => {
   expect(accountTypeChecker(mockConsistentAccountBalanceHistory)).toEqual('B');
 });
-test('accepts multiple inputs for each month');
