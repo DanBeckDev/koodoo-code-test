@@ -13,10 +13,9 @@ export function accountTypeChecker(
                 return accumulator;
             }
 
-            const currentAmount = currentValue.account.balance.amount;
-            const previousAmount =
+            const balanceDifference =
+                currentValue.account.balance.amount -
                 array[currentIndex + 1].account.balance.amount;
-            const balanceDifference = currentAmount - previousAmount;
 
             if (currentIndex === 0) {
                 return {
