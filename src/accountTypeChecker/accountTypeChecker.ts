@@ -1,26 +1,36 @@
 import {
-  IAccountBalanceHistory,
-  TAccountType,
+    IAccountBalanceHistory,
+    IAccountType,
+    TAccountResult,
 } from './accountTypeChecker.types';
 
 export function accountTypeChecker(
-  accountBalanceHistory: IAccountBalanceHistory[]
-): TAccountType {
-  const monthlyAccountBalances = accountBalanceHistory.map(
-    (oneMonthAccountHistory) => oneMonthAccountHistory.account.balance.amount
-  );
-  const accountBalanceBenchmark =
-    monthlyAccountBalances[0] - monthlyAccountBalances[1];
+    accountBalanceHistory: IAccountBalanceHistory[]
+): TAccountResult {
+    const accountType = accountBalanceHistory.reduce<IAccountType>(
+        (accumulator, currentValue, currentIndex, array) => {
+            if (currentIndex === array.length - 1) {
+                return accumulator;
+            }
 
-  const isAccountBalanceHistoryConsistent = monthlyAccountBalances.every(
-    (currentBalance, index, array) => {
-      if (index === array.length - 1) {
-        return true;
-      }
+            const currentAmount = currentValue.account.balance.amount;
+            const previousAmount =
+                array[currentIndex + 1].account.balance.amount;
+            const balanceDifference = currentAmount - previousAmount;
 
-      const compareWithNextMonthBalance = currentBalance - array[index + 1];
-      return compareWithNextMonthBalance === accountBalanceBenchmark;
-    }
-  );
-  return isAccountBalanceHistoryConsistent ? 'B' : 'A';
+            if (currentIndex === 0) {
+                return {
+                    ...accumulator,
+                    balanceDifferenceBenchmark: balanceDifference,
+                };
+            }
+
+            return balanceDifference === accumulator.balanceDifferenceBenchmark
+                ? accumulator
+                : { ...accumulator, isConsistent: false };
+        },
+        { isConsistent: true }
+    );
+
+    return accountType.isConsistent ? 'B' : 'A';
 }

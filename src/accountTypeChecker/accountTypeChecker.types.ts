@@ -1,10 +1,15 @@
 export interface IAccountBalanceHistory {
-  monthNumber: number;
-  account: {
-    balance: {
-      amount: number;
+    monthNumber: number;
+    account: {
+        balance: {
+            amount: number;
+        };
     };
-  };
 }
 
-export type TAccountType = 'A' | 'B';
+export interface IAccountType {
+    balanceDifferenceBenchmark?: number;
+    isConsistent?: boolean;
+}
+
+export type TAccountResult = 'A' | 'B';
